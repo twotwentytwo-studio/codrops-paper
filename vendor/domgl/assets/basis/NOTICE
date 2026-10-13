@@ -1,0 +1,27 @@
+Basis Universal Supercompressed GPU Texture Codec
+Copyright (C) 2019-2024 Binomial LLC. All Rights Reserved.
+
+This directory redistributes the WebAssembly build of the Basis Universal
+transcoder, unmodified:
+
+    basis_transcoder.js      emscripten glue
+    basis_transcoder.wasm    the transcoder itself
+
+Both are the work of Binomial LLC and are licensed under the Apache License,
+Version 2.0. A copy of that license is in the LICENSE file alongside this
+one. You may also obtain it at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Upstream: https://github.com/BinomialLLC/basis_universal
+
+worker.js in this directory is NOT part of Basis Universal. It is original
+work belonging to the domgl project and carries domgl's own MIT license; it
+loads the transcoder above through importScripts and speaks a message
+protocol of its own.
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the Apache License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

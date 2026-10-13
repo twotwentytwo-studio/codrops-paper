@@ -1,0 +1,22 @@
+{
+	"faces": [
+		{
+			"id": "host-grotesk-400",
+			"family": "Host Grotesk",
+			"weight": 400,
+			"style": "normal"
+		},
+		{
+			"id": "host-grotesk-500",
+			"family": "Host Grotesk",
+			"weight": 500,
+			"style": "normal"
+		},
+		{
+			"id": "sometype-mono-400",
+			"family": "Sometype Mono",
+			"weight": 400,
+			"style": "normal"
+		}
+	]
+}

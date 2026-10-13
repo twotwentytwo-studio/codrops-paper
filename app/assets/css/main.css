@@ -1,0 +1,360 @@
+@layer theme, base, components;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+
+@theme {
+	--spacing: 0.1rem;
+
+	--breakpoint-s: 650px;
+	--breakpoint-l: 1400px;
+
+	--color-black: #0f0e0c;
+	--color-white: #fcfaf5;
+	--color-orchid: #e154ff;
+
+	--color-shade: #f1eee6;
+
+	--color-raised: #ffffff;
+
+	--color-ground: var(--color-white);
+	--color-ink: var(--color-black);
+	--color-accent: var(--color-orchid);
+
+	--color-line: rgb(0 0 0 / 10%);
+
+	--font-sans: 'Host Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+	--font-mono: 'Sometype Mono', ui-monospace, monospace;
+
+	--leading-9: 0.9;
+	--leading-10: 1;
+	--leading-11: 1.1;
+	--leading-12: 1.2;
+	--leading-125: 1.25;
+
+	--tracking-display: -0.04em;
+	--tracking-h2: -0.03em;
+	--tracking-lede: -0.02em;
+
+	--tracking-body: -0.02em;
+
+	--tracking-label: var(--tracking-body);
+
+	--container-measure: 60rem;
+
+	--ease-out: ease-out;
+	--ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-snappy: cubic-bezier(0.12, 0.28, 0.35, 1);
+}
+
+@utility text-* {
+	font-size: calc(var(--spacing) * --value(integer));
+}
+
+@utility rounded-* {
+	border-radius: calc(var(--spacing) * --value(integer));
+}
+
+@utility site-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	column-gap: 1.5rem;
+	align-content: start;
+
+	@variant s {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 2rem;
+	}
+}
+
+@custom-variant gpu (html.has-gpu &);
+
+@custom-variant has-hover (@media (hover: hover) and (pointer: fine));
+
+@custom-variant touch (@media not all and (hover: hover) and (pointer: fine));
+
+@media not all and (hover: hover) and (pointer: fine) {
+	html,
+	body {
+		overflow: hidden;
+		height: 100%;
+	}
+
+	.scroll-root {
+		position: fixed;
+		inset: 0;
+		overflow-x: hidden;
+		overflow-y: auto;
+
+		overscroll-behavior-y: none;
+
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.scroll-content {
+		position: relative;
+		min-height: 100%;
+	}
+
+	body {
+		background: var(--color-ground);
+	}
+}
+
+@utility no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+@font-face {
+	font-family: 'Host Grotesk';
+	src: url('/fonts/HostGrotesk-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Host Grotesk';
+	src: url('/fonts/HostGrotesk-Medium.woff2') format('woff2');
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Sometype Mono';
+	src: url('/fonts/SometypeMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+}
+
+@property --gl-dot-size {
+	syntax: '<length>';
+	inherits: false;
+	initial-value: 2px;
+}
+
+@property --gl-dot-gap {
+	syntax: '<length>';
+	inherits: false;
+	initial-value: 30px;
+}
+
+@property --gl-size-range {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0;
+}
+
+@property --gl-opacity-range {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0;
+}
+
+@property --gl-fill {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: #ffffff;
+}
+
+@property --open {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --gl-hover {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --gl-warp {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --stick {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0;
+}
+
+@property --gl-slide {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0;
+}
+
+@property --gl-warp-size {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 140px;
+}
+
+@property --gl-warp-speed {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 1;
+}
+
+@property --gl-warp-lift {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.18;
+}
+
+@property --gl-px {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --gl-py {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --gl-pull {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --gl-reach {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 200px;
+}
+
+@property --gl-antenna {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --gl-seam-soft {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.14;
+}
+
+@property --gl-seam-noise {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.22;
+}
+
+@property --gl-seam-cell {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 8px;
+}
+
+@property --gl-seam-speed {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.12;
+}
+
+@property --gl-seam-light {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: #fcfaf5;
+}
+
+@property --gl-seam-stroke {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --gl-seam-mask {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --gl-mx {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.5;
+}
+
+@property --gl-my {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.5;
+}
+
+@property --gl-spread {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.25;
+}
+
+@property --gl-swirl {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.08;
+}
+
+@property --gl-lens {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.9;
+}
+
+@property --gl-bulge {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.5;
+}
+
+@property --gl-zoom {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0.05;
+}
+
+@property --gl-dim {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 1;
+}
+
+:root {
+	--size: 390;
+}
+
+@media (width >= 650px) {
+	:root {
+		--size: 1440;
+	}
+}
+
+html {
+	font-size: clamp(4.5px, calc((100vw / var(--size)) * 10), 12px);
+	font-family: var(--font-sans);
+	background-color: var(--color-ground);
+	color: var(--color-ink);
+	-webkit-font-smoothing: antialiased;
+	scrollbar-gutter: stable;
+}
+
+body {
+	line-height: var(--leading-12);
+	letter-spacing: var(--tracking-body);
+}
+
+[data-gl-text] {
+	font-variant-ligatures: none;
+}

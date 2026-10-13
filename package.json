@@ -1,0 +1,28 @@
+{
+	"name": "paper",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@11.9.0",
+	"scripts": {
+		"dev": "nuxt dev --port 3300",
+		"build": "nuxt build",
+		"postinstall": "nuxt prepare",
+		"typecheck": "nuxt typecheck"
+	},
+	"dependencies": {
+		"@domgl/motion": "file:vendor/motion",
+		"@lama/domgl": "file:vendor/domgl",
+		"@lama/split": "https://github.com/jesperlandberg/lama/releases/download/split-v0.2.0/lama-split-0.2.0.tgz",
+		"lenis": "^1.3.26",
+		"nuxt": "^4.5.2",
+		"vue": "^3.5.41"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4.3.3",
+		"@types/node": "^26.4.1",
+		"@webgpu/types": "^0.1.60",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^5",
+		"vue-tsc": "^3.3.10"
+	}
+}

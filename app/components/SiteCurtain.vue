@@ -1,7 +1,8 @@
 <template>
 	<div
-		class="bg-ground pointer-events-none fixed inset-0 z-50 transition-opacity duration-350 ease-out"
-		:class="up ? 'opacity-0' : 'opacity-100'"
+		data-curtain
+		class="curtain bg-ground pointer-events-none fixed inset-0 z-50 transition-opacity duration-350 ease-out"
+		:class="[up ? 'opacity-0' : 'opacity-100', { armed }]"
 		aria-hidden="true"
 	/>
 </template>
@@ -10,6 +11,8 @@
 const HOLD = 4000
 
 const up = ref(false)
+
+const armed = ref(false)
 
 const gl = useDomGl()
 
@@ -43,11 +46,30 @@ const settled = async () => {
 onMounted(() => {
 	const lift = () => { up.value = true }
 
+	armed.value = true
+
+	if (performance.now() >= HOLD) return lift()
+
 	const cap = setTimeout(lift, HOLD)
 
-	settled().finally(() => {
-		clearTimeout(cap)
-		lift()
-	})
+	void settled()
+		.catch(() => {})
+		.then(() => {
+			clearTimeout(cap)
+			lift()
+		})
 })
 </script>
+
+<style scoped>
+.curtain:not(.armed) {
+	animation: lift 0.35s ease-out 4s forwards;
+}
+
+@keyframes lift {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+</style>

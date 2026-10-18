@@ -1,6 +1,7 @@
 <template>
 	<article class="group card flex flex-col gap-10">
 		<div
+			ref="media"
 			class="relative overflow-hidden transition-[--gl-hover] duration-350 ease-out group-hover:[--gl-hover:1]"
 			:class="square ? 'aspect-square' : 'aspect-[9/8]'"
 		>
@@ -30,6 +31,10 @@ defineProps<{
 	title: string
 	square?: boolean
 }>()
+
+const media = useTemplateRef<HTMLElement>('media')
+
+defineExpose({ media })
 </script>
 
 <style scoped>

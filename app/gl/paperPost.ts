@@ -12,6 +12,11 @@ const FOLD_EDGE = 0.06
 
 const FLOOR = 0.004
 
+/*
+ * The relief and lighting are ported from `paperTextureFragmentShader` in
+ * @paper-design/shaders 0.0.80 (Apache-2.0) and modified: rewritten in WGSL
+ * and masked by the fluid's ink. See THIRD-PARTY-NOTICES.md.
+ */
 const SHADER = /* wgsl */ `
 	struct C {
 		size: vec2f,

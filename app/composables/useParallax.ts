@@ -1,9 +1,13 @@
-const QUERY = '(hover: hover) and (pointer: fine) and (min-width: 650px)'
+const QUERY = '(min-width: 650px)'
 
 export const useParallax = () => {
+	const { $mouse } = useNuxtApp()
+
 	const on = ref(false)
 
 	onMounted(() => {
+		if (!$mouse) return
+
 		const mql = window.matchMedia(QUERY)
 
 		on.value = mql.matches

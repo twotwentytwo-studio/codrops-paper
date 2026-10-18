@@ -16,6 +16,14 @@ export default defineNuxtConfig({
 
 	app: {
 		head: {
+			htmlAttrs: { lang: 'en' },
+			script: [
+				{
+					innerHTML: "document.documentElement.classList.add(matchMedia('(hover: hover) and (pointer: fine)').matches ? 'mouse' : 'touch')",
+					tagPosition: 'head',
+				},
+			],
+			noscript: [{ innerHTML: '<style>[data-curtain]{display:none}</style>' }],
 			title: 'Paper × domgl',
 			meta: [
 				{ name: 'viewport', content: 'width=device-width, initial-scale=1' },

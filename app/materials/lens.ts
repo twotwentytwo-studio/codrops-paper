@@ -1,5 +1,10 @@
 import type { MaterialDef } from '@lama/domgl'
 
+/*
+ * Ported from `lensDistortionFragmentShader` in @paper-design/shaders 0.0.80
+ * (Apache-2.0) and modified: rewritten in WGSL, reduced to the dispersion fan,
+ * and centred on the pointer. See THIRD-PARTY-NOTICES.md.
+ */
 export const lens: MaterialDef = {
 	uniforms: {
 		hover: '--gl-hover',
@@ -45,6 +50,8 @@ export const lens: MaterialDef = {
 
 		fn shade(s: Surface) -> vec4f {
 			let src = sample(s, s.uv);
+
+			if (uniforms().hover < 0.01) { return src; }
 
 			let h = clamp(s.u.hover, 0.0, 1.0);
 

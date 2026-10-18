@@ -8,3 +8,7 @@ other — is granted.
 The Basis Universal transcoder under domgl/assets/basis is third-party
 software under the Apache License 2.0; its own LICENSE and NOTICE are beside
 it, and nothing above applies to it.
+
+The WGSL function paperDot in index.js is ported from @paper-design/shaders
+(Apache License 2.0). Nothing above applies to it either; see
+THIRD-PARTY-NOTICES.md at the root of this repository.

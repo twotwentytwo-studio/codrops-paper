@@ -46,7 +46,7 @@
 
 	--ease-out: ease-out;
 	--ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
-	--ease-snappy: cubic-bezier(0.12, 0.28, 0.35, 1);
+	--ease-snappy: linear(0, 0.0191, 0.062, 0.1566, 0.3378, 0.5335, 0.6892, 0.8, 0.8686, 0.912, 0.9469, 0.964, 0.9741, 0.981, 0.9859, 0.9896, 0.9923, 0.9946, 0.9961, 0.9976, 0.9984, 0.9991, 0.9996, 0.9998, 1);
 }
 
 @utility text-* {
@@ -73,43 +73,34 @@
 
 @custom-variant has-hover (@media (hover: hover) and (pointer: fine));
 
-@custom-variant touch (@media not all and (hover: hover) and (pointer: fine));
+@custom-variant touch (html.touch &);
 
-@media not all and (hover: hover) and (pointer: fine) {
-	html,
-	body {
-		overflow: hidden;
-		height: 100%;
-	}
-
-	.scroll-root {
-		position: fixed;
-		inset: 0;
-		overflow-x: hidden;
-		overflow-y: auto;
-
-		overscroll-behavior-y: none;
-
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.scroll-content {
-		position: relative;
-		min-height: 100%;
-	}
-
-	body {
-		background: var(--color-ground);
-	}
+html.touch,
+html.touch body {
+	overflow: hidden;
+	height: 100%;
 }
 
-@utility no-scrollbar {
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+html.touch body {
+	background: var(--color-ground);
+}
 
-	&::-webkit-scrollbar {
-		display: none;
-	}
+html.touch .scroll-root {
+	position: fixed;
+	inset: calc(var(--pad, 0px) * -1) 0;
+	padding-block: var(--pad, 0px);
+	scroll-padding-block: var(--pad, 0px);
+	overflow-x: hidden;
+	overflow-y: auto;
+
+	overscroll-behavior-y: none;
+
+	-webkit-overflow-scrolling: touch;
+}
+
+html.touch .scroll-content {
+	position: relative;
+	min-height: 100%;
 }
 
 @font-face {
@@ -131,36 +122,6 @@
 	src: url('/fonts/SometypeMono-Regular.woff2') format('woff2');
 	font-weight: 400;
 	font-display: swap;
-}
-
-@property --gl-dot-size {
-	syntax: '<length>';
-	inherits: false;
-	initial-value: 2px;
-}
-
-@property --gl-dot-gap {
-	syntax: '<length>';
-	inherits: false;
-	initial-value: 30px;
-}
-
-@property --gl-size-range {
-	syntax: '<number>';
-	inherits: false;
-	initial-value: 0;
-}
-
-@property --gl-opacity-range {
-	syntax: '<number>';
-	inherits: false;
-	initial-value: 0;
-}
-
-@property --gl-fill {
-	syntax: '<color>';
-	inherits: false;
-	initial-value: #ffffff;
 }
 
 @property --open {
@@ -205,12 +166,6 @@
 	initial-value: 1;
 }
 
-@property --gl-warp-lift {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0.18;
-}
-
 @property --gl-px {
 	syntax: '<length>';
 	inherits: true;
@@ -229,40 +184,10 @@
 	initial-value: 0;
 }
 
-@property --gl-reach {
-	syntax: '<length>';
-	inherits: true;
-	initial-value: 200px;
-}
-
-@property --gl-antenna {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0;
-}
-
-@property --gl-seam-soft {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0.14;
-}
-
 @property --gl-seam-noise {
 	syntax: '<number>';
 	inherits: true;
 	initial-value: 0.22;
-}
-
-@property --gl-seam-cell {
-	syntax: '<length>';
-	inherits: true;
-	initial-value: 8px;
-}
-
-@property --gl-seam-speed {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0.12;
 }
 
 @property --gl-seam-light {
@@ -325,12 +250,6 @@
 	initial-value: 0.05;
 }
 
-@property --gl-dim {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 1;
-}
-
 :root {
 	--size: 390;
 }
@@ -353,8 +272,4 @@ html {
 body {
 	line-height: var(--leading-12);
 	letter-spacing: var(--tracking-body);
-}
-
-[data-gl-text] {
-	font-variant-ligatures: none;
 }

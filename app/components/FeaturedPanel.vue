@@ -1,19 +1,21 @@
 <template>
-	<div ref="slot" class="w-full touch:hidden" :style="{ height: height ? `${height}px` : undefined }" />
+	<section id="projects">
+		<div ref="slot" class="w-full touch:hidden" :style="{ height: height ? `${height}px` : undefined }" />
 
-	<div
-		ref="panel"
-		class="fixed top-0 left-0 z-0 h-0 w-0 overflow-hidden touch:relative touch:h-auto touch:w-full touch:overflow-visible"
-	>
-		<gl-solid class="pointer-events-none absolute inset-0 bg-black" />
+		<div
+			ref="panel"
+			class="fixed top-0 left-0 z-0 h-0 w-0 overflow-hidden touch:relative touch:h-auto touch:w-full touch:overflow-visible"
+		>
+			<gl-solid class="pointer-events-none absolute inset-0 bg-black" />
 
-		<div ref="world" class="absolute top-0 left-0 h-screen w-screen touch:static touch:h-auto touch:w-auto">
-			<div ref="content" class="absolute inset-x-0 top-0 flex flex-col gap-40 pt-80 pb-20 text-white touch:static s:gap-80 s:pt-160 s:pb-40">
-				<site-marquee text="Featured projects" />
-				<featured-grid />
+			<div ref="world" class="absolute top-0 left-0 h-screen w-screen touch:static touch:h-auto touch:w-auto">
+				<div ref="content" class="absolute inset-x-0 top-0 flex flex-col gap-40 pt-80 pb-20 text-white touch:static s:gap-80 s:pt-160 s:pb-40">
+					<site-marquee text="Featured projects" />
+					<featured-grid />
+				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -67,6 +69,8 @@ const measure = async () => {
 
 	from = docRect(props.from)
 	to = docRect(slot.value)
+
+	if (world.value) world.value.style.width = `${to.w}px`
 
 	last = Number.NaN
 }

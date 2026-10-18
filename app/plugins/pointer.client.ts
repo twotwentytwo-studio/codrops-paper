@@ -1,5 +1,13 @@
 import { Spring } from '@domgl/motion'
 
+type Hand = { x: number; y: number; pull: number }
+
+declare module '#app' {
+	interface NuxtApp {
+		$hand: () => Readonly<Hand>
+	}
+}
+
 export default defineNuxtPlugin({
 	name: 'pointer',
 	dependsOn: ['lenis'],
@@ -11,9 +19,9 @@ export default defineNuxtPlugin({
 		const y = new Spring(0, HAND)
 		const pull = new Spring(0, { response: 0.35, dampingRatio: 1 })
 
-		let primed = false
+		const hand: Hand = { x: 0, y: 0, pull: 0 }
 
-		const root = document.documentElement
+		let primed = false
 
 		const onMove = (e: PointerEvent) => {
 			if (e.pointerType !== 'mouse') return
@@ -40,14 +48,20 @@ export default defineNuxtPlugin({
 			y.step(dt)
 			pull.step(dt)
 
-			root.style.setProperty('--gl-px', `${x.value}px`)
-			root.style.setProperty('--gl-py', `${y.value}px`)
-			root.style.setProperty('--gl-pull', `${pull.value}`)
+			hand.x = x.value
+			hand.y = y.value
+			hand.pull = pull.value
 		}
 
 		window.addEventListener('pointermove', onMove, { passive: true })
-		document.addEventListener('pointerleave', onLeave)
+		document.documentElement.addEventListener('pointerleave', onLeave)
 
 		nuxtApp.$write(onWrite)
+
+		return {
+			provide: {
+				hand: () => hand as Readonly<Hand>,
+			},
+		}
 	},
 })

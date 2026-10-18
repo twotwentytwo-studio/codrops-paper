@@ -41,5 +41,5 @@ const write = (x: number) => {
 	el.style.transform = `translate3d(${wrapped}px, 0, 0)`
 }
 
-defineExpose({ write, span })
+defineExpose({ write })
 </script>

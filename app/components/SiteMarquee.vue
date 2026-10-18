@@ -26,16 +26,19 @@ const COPIES = 5
 const viewport = useTemplateRef<HTMLElement>('viewport')
 const track = useTemplateRef<HTMLElement>('track')
 
-const { $write } = useNuxtApp()
+const { $write, $mouse, $scroller } = useNuxtApp()
 
 let unit = 0
 let offset = 0
+
+let visible = false
 
 const measure = () => {
 	const kids = track.value?.children
 	if (!kids || kids.length < 3) return
 
 	unit = (kids[2] as HTMLElement).offsetLeft - (kids[0] as HTMLElement).offsetLeft
+	if (unit > 0) offset %= unit
 }
 
 const write = () => {
@@ -43,8 +46,6 @@ const write = () => {
 
 	track.value.style.transform = `translate3d(${offset}px, 0, 0)`
 }
-
-let visible = false
 
 const onTick = (ratio: number) => {
 	if (!visible || unit <= 0) return
@@ -56,13 +57,9 @@ const onTick = (ratio: number) => {
 	write()
 }
 
-const onResize = () => {
-	measure()
-	write()
-}
-
 let unTick: (() => void) | null = null
 let io: IntersectionObserver | null = null
+let ro: ResizeObserver | null = null
 
 onMounted(async () => {
 	await nextTick()
@@ -72,17 +69,26 @@ onMounted(async () => {
 
 	unTick = $write(onTick)
 
-	if (viewport.value) {
-		io = new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting }, { rootMargin: '100px' })
-		io.observe(viewport.value)
+	if (track.value) {
+		ro = new ResizeObserver(() => {
+			measure()
+			write()
+		})
+		ro.observe(track.value)
 	}
 
-	window.addEventListener('resize', onResize)
+	if (viewport.value) {
+		io = new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting }, {
+			root: $mouse ? null : $scroller(),
+			rootMargin: '100px',
+		})
+		io.observe(viewport.value)
+	}
 })
 
 onBeforeUnmount(() => {
 	unTick?.()
 	io?.disconnect()
-	window.removeEventListener('resize', onResize)
+	ro?.disconnect()
 })
 </script>

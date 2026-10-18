@@ -1,4 +1,4 @@
-import type { DefineComponent, ShallowRef } from 'vue'
+import type { DefineComponent, Ref, ShallowRef } from 'vue'
 
 export type UniformType = 'number' | 'color'
 export type UniformDef = string | { css?: string; prop?: string; type?: UniformType }
@@ -32,7 +32,7 @@ export type DomGl = {
 export type DomGlContext = { gl: DomGl; media: unknown }
 
 export declare function useDomGl(): ShallowRef<DomGlContext | null>
-
+export declare function fontsReady(cap?: number): Promise<unknown>
 export declare const DomGl: DefineComponent<any>
 export declare const GlFluid: DefineComponent<any>
 export declare const GlMedia: DefineComponent<any>

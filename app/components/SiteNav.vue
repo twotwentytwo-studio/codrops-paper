@@ -1,7 +1,7 @@
 <template>
 	<nav class="fixed inset-x-0 top-0 z-10 flex justify-center p-20 text-black s:p-40">
 		<div ref="bar" class="bar flex items-center justify-between">
-			<span class="shrink-0 text-16 leading-12 font-medium tracking-body">
+			<span class="wordmark shrink-0 text-16 leading-12 font-medium tracking-body">
 				PaperDrops<span class="stop">.</span>
 			</span>
 
@@ -9,13 +9,14 @@
 				<div class="hidden items-start gap-30 s:flex">
 					<a
 						v-for="link in LINKS"
-						:key="link"
-						href="#"
+						:key="link.id"
+						:href="`#${link.id}`"
 						class="shrink-0 text-16 leading-12 font-medium tracking-body"
-					>{{ link }}</a>
+						@click.prevent="go(link.id)"
+					>{{ link.label }}</a>
 				</div>
 
-				<site-button label="Get in touch" />
+				<site-button label="Get in touch" to="#contact" @click.prevent="$scrollTo('bottom')" />
 			</div>
 		</div>
 	</nav>
@@ -24,14 +25,22 @@
 <script setup lang="ts">
 import { Spring } from '@domgl/motion'
 
-const LINKS = ['Projects', 'Culture', 'Contact']
+const LINKS = [
+	{ id: 'projects', label: 'Projects' },
+	{ id: 'culture', label: 'Culture' },
+]
 
 const ON = 60
 const OFF = 20
 
 const bar = useTemplateRef<HTMLElement>('bar')
 
-const { $write, $scrollY } = useNuxtApp()
+const { $write, $scrollY, $scrollTo } = useNuxtApp()
+
+const go = (id: string) => {
+	const el = document.getElementById(id)
+	if (el) $scrollTo(el)
+}
 
 const stick = new Spring(0, { response: 0.5, dampingRatio: 1 })
 
@@ -80,6 +89,11 @@ onBeforeUnmount(() => unWrite?.())
 	background-color: color-mix(in srgb, var(--color-raised) calc(var(--stick) * 100%), transparent);
 
 	border: 1px solid color-mix(in srgb, var(--color-line) calc(var(--stick) * 100%), transparent);
+}
+
+.wordmark,
+.stop {
+	--stick: inherit;
 }
 
 .stop {

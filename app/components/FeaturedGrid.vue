@@ -9,11 +9,10 @@
 			<featured-card
 				v-for="(cell, j) in row"
 				:key="j"
-				:ref="(c) => { cards[r * 2 + j] = (c as { $el?: HTMLElement } | null)?.$el ?? null }"
+				:ref="(c) => setCard(r * 2 + j, c)"
 				:src="cell.src"
 				:title="cell.title"
 				:square="cell.square"
-				class="transition-[--gl-hover] duration-350 ease-out hover:[--gl-hover:1]"
 				@pointermove="track(r * 2 + j, $event)"
 			/>
 		</div>
@@ -34,7 +33,15 @@ const ROWS = [CELLS.slice(0, 2), CELLS.slice(2, 4)]
 
 const SHIFT = 0.07
 
-const cards = ref<(HTMLElement | null)[]>([])
+const cards: (HTMLElement | null)[] = CELLS.map(() => null)
+const media: (HTMLElement | null)[] = CELLS.map(() => null)
+
+const setCard = (i: number, c: unknown) => {
+	const card = c as { $el?: HTMLElement; media?: HTMLElement | null } | null
+
+	cards[i] = card?.$el ?? null
+	media[i] = card?.media ?? null
+}
 
 const { $write } = useNuxtApp()
 
@@ -48,17 +55,19 @@ const applied = CELLS.map(() => 0)
 
 const onScreen = new Set<Element>()
 
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
+
 const track = (i: number, e: PointerEvent) => {
-	const el = cards.value[i]
+	const el = media[i] ?? cards[i]
 	if (!el) return
 
 	const box = el.getBoundingClientRect()
 
-	pos.setTargets(i, (e.clientX - box.left) / box.width, (e.clientY - box.top) / box.height)
+	pos.setTargets(i, clamp01((e.clientX - box.left) / box.width), clamp01((e.clientY - box.top) / box.height))
 }
 
 const writeCard = (i: number) => {
-	const el = cards.value[i]
+	const el = cards[i]
 	if (!el) return
 
 	el.style.setProperty('--gl-mx', `${pos.get(i, 0)}`)
@@ -71,7 +80,7 @@ const parallax = () => {
 			if (!applied[i]) continue
 
 			applied[i] = 0
-			const el = cards.value[i]
+			const el = cards[i]
 			if (el) el.style.transform = ''
 		}
 
@@ -85,7 +94,7 @@ const parallax = () => {
 	for (let i = 0; i < CELLS.length; i++) {
 		if (CELLS[i]!.square) continue
 
-		const el = cards.value[i]
+		const el = cards[i]
 		if (!el) continue
 
 		const box = el.getBoundingClientRect()
@@ -111,7 +120,7 @@ onMounted(() => {
 		}
 	}, { rootMargin: '25% 0px' })
 
-	for (const el of cards.value) if (el) io.observe(el)
+	for (const el of cards) if (el) io.observe(el)
 
 	unWrite = $write((ratio: number) => {
 		parallax()

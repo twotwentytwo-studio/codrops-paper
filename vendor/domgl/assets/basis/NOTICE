@@ -16,7 +16,7 @@ one. You may also obtain it at:
 Upstream: https://github.com/BinomialLLC/basis_universal
 
 worker.js in this directory is NOT part of Basis Universal. It is original
-work belonging to the domgl project and carries domgl's own MIT license; it
+work belonging to the domgl project and is covered by the LICENSE in vendor/domgl, not by the Apache License; it
 loads the transcoder above through importScripts and speaks a message
 protocol of its own.
 

@@ -1,5 +1,5 @@
 <template>
-	<section class="flex flex-col gap-30 pt-20 pb-40 s:pt-40 s:pb-80">
+	<section id="culture" class="flex scroll-mt-80 flex-col gap-30 pt-20 pb-40 s:scroll-mt-120 s:pt-40 s:pb-80">
 		<div class="flex flex-col gap-30 px-20 s:px-120">
 			<div class="flex items-center gap-40">
 				<gl-text tag="span" class="shrink-0 font-mono text-12 leading-10 font-normal tracking-label uppercase">Culture</gl-text>
@@ -57,7 +57,7 @@ const area = useTemplateRef<HTMLElement>('area')
 const left = useTemplateRef<{ write: (x: number) => void }>('left')
 const right = useTemplateRef<{ write: (x: number) => void }>('right')
 
-const { $write } = useNuxtApp()
+const { $write, $mouse, $scroller } = useNuxtApp()
 
 const drag = new Spring(0, { response: 0.4, dampingRatio: 1 })
 
@@ -114,7 +114,9 @@ const onWrite = (ratio: number) => {
 	paint()
 }
 
-const onPress = () => { pressed = true }
+const primary = (e: PointerEvent) => e.isPrimary && e.button === 0
+
+const onPress = (e: PointerEvent) => { if (primary(e)) pressed = true }
 const onRelease = () => { pressed = false }
 
 let release: (() => void) | null = null
@@ -127,13 +129,16 @@ onMounted(async () => {
 	paint()
 
 	if (area.value) {
-		release = bindDrag(area.value, { x: drag, lock: true })
+		release = bindDrag(area.value, { x: drag, lock: true, accept: primary })
 
 		area.value.addEventListener('pointerdown', onPress)
 		window.addEventListener('pointerup', onRelease)
 		window.addEventListener('pointercancel', onRelease)
 
-		io = new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting }, { rootMargin: '50% 0px' })
+		io = new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting }, {
+			root: $mouse ? null : $scroller(),
+			rootMargin: '50% 0px',
+		})
 		io.observe(area.value)
 	}
 

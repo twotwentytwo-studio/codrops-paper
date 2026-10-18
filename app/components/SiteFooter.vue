@@ -1,5 +1,5 @@
 <template>
-	<footer class="relative flex w-full flex-col items-start overflow-hidden px-20 s:px-120">
+	<footer id="contact" class="relative flex w-full flex-col items-start overflow-hidden px-20 s:px-120">
 		<div class="bg-line h-px w-full shrink-0" />
 
 		<div ref="inner" class="flex w-full flex-col items-start will-change-transform">
@@ -137,8 +137,12 @@ let unWrite: (() => void) | null = null
 
 let unReveal: (() => void) | null = null
 
+let alive = true
+
 onMounted(async () => {
 	await nextTick()
+
+	if (!alive) return
 
 	unReveal = watch(gl, (ctx) => {
 		ctx?.gl.defineReveal('mark', { unit: 'glyph', code: MARK })
@@ -147,16 +151,22 @@ onMounted(async () => {
 	lift()
 	unWrite = $write(lift)
 
-	await document.fonts?.ready
+	await fontsReady()
+
+	if (!alive) return
 
 	fit()
 
 	window.addEventListener('resize', onResize)
+	document.fonts?.addEventListener('loadingdone', onResize)
 })
 
 onBeforeUnmount(() => {
+	alive = false
+
 	cancelAnimationFrame(frame)
 	window.removeEventListener('resize', onResize)
+	document.fonts?.removeEventListener('loadingdone', onResize)
 	unWrite?.()
 	unReveal?.()
 })

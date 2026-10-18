@@ -1,6 +1,6 @@
 <template>
 	<dom-gl
-		:options="{ velocity, host, scroll, textures: { minCompressed: 800 } }"
+		:options="{ velocity: $velocity, host, scroll, textures: { minCompressed: 800 } }"
 		:pad="pad"
 		:tick="$tick"
 	>
@@ -8,7 +8,7 @@
 
 		<site-paper />
 
-		<div class="scroll-root">
+		<div ref="scrollRoot" class="scroll-root">
 			<div ref="content" class="scroll-content">
 				<site-nav />
 
@@ -34,11 +34,9 @@
 </template>
 
 <script setup lang="ts">
-const { $mouse, $velocity, $tick, $write, $scroller, $scrollY } = useNuxtApp()
+const { $mouse, $velocity, $tick, $write, $scrollY } = useNuxtApp()
 
 const mouse = $mouse ?? true
-
-const velocity = mouse ? $velocity : () => 0
 
 const fluid = ref(false)
 
@@ -46,9 +44,7 @@ onMounted(() => { fluid.value = mouse })
 
 const pad = ref(0)
 
-const measurePad = () => { pad.value = mouse ? 0 : Math.round(window.innerHeight * 0.25) }
-
-if (import.meta.client) measurePad()
+if (import.meta.client) pad.value = mouse ? 0 : Math.round(window.innerHeight * 0.25)
 
 const gl = useDomGl()
 
@@ -65,6 +61,7 @@ const scroll = mouse ? undefined : () => ({ x: 0, y: $scrollY() })
 
 let unWrite: (() => void) | null = null
 
+const scrollRoot = useTemplateRef<HTMLElement>('scrollRoot')
 const content = useTemplateRef<HTMLElement>('content')
 
 onMounted(() => {
@@ -74,22 +71,25 @@ onMounted(() => {
 
 	let base = 0
 
-	const measureBase = () => {
+	const measure = () => {
+		pad.value = Math.round(window.innerHeight * 0.25)
+		scrollRoot.value?.style.setProperty('--pad', `${pad.value}px`)
+
 		const el = content.value
 		base = el ? el.getBoundingClientRect().top + $scrollY() : 0
 	}
 
 	const place = () => {
-		const root = $scroller()
+		const el = content.value
 		const core = gl.value?.gl.core
-		if (!root) return
+		if (!el) return
 
 		const w = window.innerWidth
 		const h = window.innerHeight
 		const ch = h + pad.value * 2
 
 		const top = $scrollY()
-		const y = Math.min(Math.max(top - pad.value, 0), Math.max(0, root.scrollHeight - ch))
+		const y = Math.min(Math.max(top - pad.value, 0), Math.max(0, el.offsetHeight - ch))
 
 		stage.style.width = `${w}px`
 		stage.style.height = `${ch}px`
@@ -98,18 +98,13 @@ onMounted(() => {
 		if (core) core.originY = Math.round(y) - top
 	}
 
-	const onResize = () => {
-		measurePad()
-		measureBase()
-	}
-
-	measureBase()
+	measure()
 	place()
 	unWrite = $write(place)
 
-	window.addEventListener('resize', onResize)
+	window.addEventListener('resize', measure)
 
-	onScopeDispose(() => window.removeEventListener('resize', onResize))
+	onScopeDispose(() => window.removeEventListener('resize', measure))
 })
 
 onBeforeUnmount(() => unWrite?.())

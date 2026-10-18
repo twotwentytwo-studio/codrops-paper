@@ -8,6 +8,8 @@
 
 		<site-paper />
 
+		<site-dummy />
+
 		<div ref="scrollRoot" class="scroll-root">
 			<div ref="content" class="scroll-content">
 				<site-nav />

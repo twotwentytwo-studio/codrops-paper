@@ -14,11 +14,13 @@
 					<div class="flex flex-col items-start gap-15">
 						<gl-text
 							v-for="link in group.links"
-							:key="link"
+							:key="link.label"
 							tag="a"
-							href="#"
+							:href="link.id ? `#${link.id}` : '#'"
+							:data-dummy="link.id ? undefined : ''"
 							class="text-ink shrink-0 font-mono text-12 leading-10 font-normal tracking-label uppercase transition-opacity duration-350 ease-out has-hover:hover:opacity-60"
-						>{{ link }}</gl-text>
+							@click="go($event, link.id)"
+						>{{ link.label }}</gl-text>
 					</div>
 				</div>
 			</div>
@@ -48,11 +50,24 @@
 </template>
 
 <script setup lang="ts">
-const GROUPS = [
-	{ title: 'Navigation', links: ['Projects', 'Culture', 'Join the team'] },
-	{ title: 'Legal', links: ['Privacy', 'Cookies', 'Terms'] },
-	{ title: 'Contact', links: ['hello@paperdrops.com'] },
+type Link = { label: string; id?: string }
+
+const GROUPS: { title: string; links: Link[] }[] = [
+	{ title: 'Navigation', links: [{ label: 'Projects', id: 'projects' }, { label: 'Culture', id: 'culture' }, { label: 'Join the team' }] },
+	{ title: 'Legal', links: [{ label: 'Privacy' }, { label: 'Cookies' }, { label: 'Terms' }] },
+	{ title: 'Contact', links: [{ label: 'hello@paperdrops.com' }] },
 ]
+
+const { $scrollTo, $write } = useNuxtApp()
+
+const go =(e: MouseEvent, id?: string) => {
+	if (!id) return
+
+	e.preventDefault()
+
+	const el = document.getElementById(id)
+	if (el) $scrollTo(el)
+}
 
 const MARK = /* wgsl */ `
 	let t = expo(seq(g, g.at, g.index * 0.6));
@@ -130,8 +145,6 @@ const onResize = () => {
 	cancelAnimationFrame(frame)
 	frame = requestAnimationFrame(fit)
 }
-
-const { $write } = useNuxtApp()
 
 let unWrite: (() => void) | null = null
 

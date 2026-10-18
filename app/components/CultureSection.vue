@@ -18,7 +18,7 @@
 						build brands with depth, dimension, and a point of view. Not just logos or guidelines, but full brand systems designed to help ambitious companies stand out, scale, and become instantly recognizable.
 					</gl-text>
 
-					<site-button label="Join the team" />
+					<site-button label="Join the team" data-dummy />
 				</div>
 			</div>
 		</div>

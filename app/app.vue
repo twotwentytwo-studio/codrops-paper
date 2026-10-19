@@ -1,6 +1,7 @@
 <template>
 	<dom-gl
-		:options="{ velocity: $velocity, host, scroll, textures: { minCompressed: 800 } }"
+		:options="{ velocity: $velocity, host, scroll, glyphs: `${base}glyphs/`, textures: { minCompressed: 800 } }"
+		:basis="`${base}_domgl/basis/`"
 		:pad="pad"
 		:tick="$tick"
 	>
@@ -37,6 +38,9 @@
 
 <script setup lang="ts">
 const { $mouse, $velocity, $tick, $write, $scrollY } = useNuxtApp()
+
+// The app's base URL, so glyphs and the transcoder also load from a subfolder
+const base = useRuntimeConfig().app.baseURL
 
 const mouse = $mouse ?? true
 

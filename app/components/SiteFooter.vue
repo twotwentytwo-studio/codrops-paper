@@ -33,6 +33,8 @@
 				<gl-text tag="p" class="font-mono text-12 leading-125 font-normal tracking-label uppercase">
 					Design and build by Jesper Landberg.
 				</gl-text>
+
+				<site-button label="Download Paper" to="https://paper.design/downloads" />
 			</div>
 		</div>
 

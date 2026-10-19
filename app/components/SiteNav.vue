@@ -16,7 +16,7 @@
 					>{{ link.label }}</a>
 				</div>
 
-				<site-button label="Get in touch" to="#contact" @click.prevent="$scrollTo('bottom')" />
+				<site-button label="Article on Codrops" to="https://tympanus.net/codrops/?p=124140" />
 			</div>
 		</div>
 	</nav>

@@ -1,5 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const base = process.env.NUXT_APP_BASE_URL ?? '/'
+
 export default defineNuxtConfig({
 	compatibilityDate: '2026-09-01',
 	devtools: { enabled: false },
@@ -11,7 +13,18 @@ export default defineNuxtConfig({
 	css: ['~/assets/css/main.css'],
 
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+			// Prefix the media paths with the base URL, so the site also works from a subfolder
+			{
+				name: 'media-base',
+				enforce: 'pre',
+				transform(code, id) {
+					if (base === '/' || !id.endsWith('generated/media.json')) return
+					return code.replaceAll('"/img/', `"${base}img/`).replaceAll('"/tx/', `"${base}tx/`)
+				},
+			},
+		],
 	},
 
 	app: {
@@ -29,7 +42,7 @@ export default defineNuxtConfig({
 				{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 				{ name: 'description', content: 'A small site to test the Paper pipeline: design on the canvas, hand the file to code, drive the shaders with scroll.' },
 			],
-			link: ['/fonts/HostGrotesk-Regular.woff2', '/fonts/HostGrotesk-Medium.woff2'].map((href) => ({
+			link: [`${base}fonts/HostGrotesk-Regular.woff2`, `${base}fonts/HostGrotesk-Medium.woff2`].map((href) => ({
 				rel: 'preload' as const,
 				as: 'font' as const,
 				type: 'font/woff2',
